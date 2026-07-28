@@ -1,47 +1,85 @@
+### Sequential
 ```
-Controller
-
-│
-
-▼
-
+Client
+   │
+   ▼
+Router
+   │
+   ▼
+ConcurrencyController.TestConcurrency()
+   │
+   ▼
 MeasureExecution()
+   │
+   ├── Start Timer
+   │
+   ├── RunSequential()
+   │       │
+   │       ├── For each URL
+   │       │       │
+   │       │       ▼
+   │       │   FetchAPI()
+   │       │       │
+   │       │       ▼
+   │       │   NewGETRequest()
+   │       │       │
+   │       │       ▼
+   │       │   setDefaultHeaders()
+   │       │       │
+   │       │       ▼
+   │       │   DoRequest()
+   │       │       │
+   │       │       ▼
+   │       │   httpClient.Do()
+   │       │       │
+   │       │       ▼
+   │       │   APIResult
+   │       │
+   │       └── Return []APIResult
+   │
+   ├── Stop Timer
+   └── Build PhaseResult
+   │
+   ▼
+ServeJSON()
+```
 
-│
+### WaitGroup
 
-├── start timer
+```
+RunWaitGroup()
 
-│
+        │
+        ▼
 
-├── fn()
+Create WaitGroup
 
-│      │
-│      ▼
-│   RunSequential()
-│      │
-│      ├── URL 1
-│      │     │
-│      │     ▼
-│      │ NewGETRequest()
-│      │
-│      │ DoRequest()
-│      │
-│      ├── URL 2
-│      │
-│      ├── URL 3
-│      │
-│      └── ...
-│
-│
-├── stop timer
-│
-▼
+        │
+        ▼
 
-PhaseResult
+Loop URLs
 
-│
+        │
+        ├── Add(1)
+        │
+        ├── Goroutine 1
+        │        │
+        │        ▼
+        │    FetchAPI()
+        │
+        ├── Goroutine 2
+        │
+        ├── Goroutine 3
+        │
+        └── ...
 
-▼
+        │
+        ▼
 
-Controller
+Wait()
+
+        │
+        ▼
+
+Return []APIResult
 ```
