@@ -41,24 +41,26 @@ func NewGetRequest(url string) (*http.Request, error) {
 //   - Execute the HTTP request.
 //   - Validate the HTTP status code.
 //   - Read the response body.
-//   - Return descriptive errors for request, status, or read failures.
-func DoRequest(req *http.Request) ([]byte, error) {
+//   - Return the response body, status code, and descriptive errors.
+func DoRequest(req *http.Request) ([]byte, int, error) {
 	resp, err := httpClient.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("request failed: %w", err)
+		return nil, 0, fmt.Errorf("request failed: %w", err)
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
-		return nil, fmt.Errorf("unexpected HTTP status: %d", resp.StatusCode)
+	statusCode := resp.StatusCode
+
+	if statusCode < http.StatusOK || statusCode >= http.StatusMultipleChoices {
+		return nil, statusCode, fmt.Errorf("unexpected HTTP status: %d", statusCode)
 	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("read response body failed: %w", err)
+		return nil, statusCode, fmt.Errorf("read response body failed: %w", err)
 	}
 
-	return body, nil
+	return body, statusCode, nil
 }
 
 // setDefaultHeaders applies the application's default

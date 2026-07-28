@@ -6,12 +6,14 @@ import "time"
 //
 // Responsibilities:
 //   - Store the request URL.
+//   - Store the HTTP status code.
 //   - Store the response body.
 //   - Store any request error.
 type APIResult struct {
-	URL      string
-	Response []byte
-	Err      error
+	URL        string
+	StatusCode int
+	Response   []byte
+	Err        error
 }
 
 // PhaseResult represents the execution result of one concurrency strategy.
