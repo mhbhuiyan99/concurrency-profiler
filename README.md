@@ -83,3 +83,49 @@ Wait()
 
 Return []APIResult
 ```
+
+### Channel
+
+```
+RunChannel()
+
+        │
+        ▼
+
+Create Channel
+
+        │
+        ▼
+
+Loop URLs
+
+        │
+        ├── Goroutine 1
+        │        │
+        │        ▼
+        │   FetchAPI()
+        │        │
+        │        ▼
+        │   channel <- APIResult
+        │
+        ├── Goroutine 2
+        │
+        ├── Goroutine 3
+        │
+        └── ...
+
+        │
+        ▼
+
+Main Goroutine
+
+        │
+        ▼
+
+Receive 12 Results
+
+        │
+        ▼
+
+Return []APIResult
+```

@@ -11,20 +11,40 @@ type ConcurrencyController struct {
 	web.Controller
 }
 
-// TestConcurrency executes the sequential concurrency benchmark.
+// TestConcurrency executes and compares all concurrency implementations.
 //
 // Responsibilities:
 //   - Execute the sequential implementation.
-//   - Return the benchmark result as JSON.
+//   - Execute the WaitGroup implementation.
+//   - Execute the channel implementation.
+//   - Return the execution results as a JSON response.
 func (c *ConcurrencyController) TestConcurrency() {
 
-	result := utils.MeasureExecution(
+	seq := utils.MeasureExecution(
 		"Sequential",
 		func() []concurrency.APIResult {
 			return concurrency.RunSequential(concurrency.APIURLs)
 		},
 	)
 
-	c.Data["json"] = result
+	wg := utils.MeasureExecution(
+		"WaitGroup",
+		func() []concurrency.APIResult {
+			return concurrency.RunWaitGroup(concurrency.APIURLs)
+		},
+	)
+
+	ch := utils.MeasureExecution(
+		"Channel",
+		func() []concurrency.APIResult {
+			return concurrency.RunChannel(concurrency.APIURLs)
+		},
+	)
+
+	c.Data["json"] = map[string]any{
+		"sequential": seq,
+		"waitgroup":  wg,
+		"channel":    ch,
+	}
 	c.ServeJSON()
 }
