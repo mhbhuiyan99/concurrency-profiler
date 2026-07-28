@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"concurrency-profiler/concurrency"
+	"concurrency-profiler/utils"
 
 	"github.com/beego/beego/v2/server/web"
 )
@@ -17,7 +18,12 @@ type ConcurrencyController struct {
 //   - Return the benchmark result as JSON.
 func (c *ConcurrencyController) TestConcurrency() {
 
-	result := concurrency.RunSequential(concurrency.APIURLs)
+	result := utils.MeasureExecution(
+		"Sequential",
+		func() []concurrency.APIResult {
+			return concurrency.RunSequential(concurrency.APIURLs)
+		},
+	)
 
 	c.Data["json"] = result
 	c.ServeJSON()

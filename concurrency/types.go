@@ -12,7 +12,7 @@ import "time"
 type APIResult struct {
 	URL        string
 	StatusCode int
-	Response   []byte
+	Response   string
 	Err        error
 }
 
