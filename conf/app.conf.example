@@ -1,0 +1,11 @@
+appname = concurrency-profiler
+httpport = 8080
+runmode = dev
+autorender = false
+copyrequestbody = true
+
+base_url = add_url
+
+username = add_username
+password = add_password
+api_key = add_api_key

@@ -1,0 +1,33 @@
+/conf/app.conf
+/concurrency-profiler
+
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# Build output
+bin/
+dist/
+
+# Go workspace
+go.work
+go.work.sum
+
+# Coverage
+*.out
+coverage.out
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
