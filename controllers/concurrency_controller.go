@@ -1,14 +1,24 @@
 package controllers
 
-import "github.com/beego/beego/v2/server/web"
+import (
+	"concurrency-profiler/concurrency"
+
+	"github.com/beego/beego/v2/server/web"
+)
 
 type ConcurrencyController struct {
 	web.Controller
 }
 
+// TestConcurrency executes the sequential concurrency benchmark.
+//
+// Responsibilities:
+//   - Execute the sequential implementation.
+//   - Return the benchmark result as JSON.
 func (c *ConcurrencyController) TestConcurrency() {
-	c.Data["json"] = map[string]string {
-		"message": "Concurrency Profile API is running",
-	}
+
+	result := concurrency.RunSequential(concurrency.APIURLs)
+
+	c.Data["json"] = result
 	c.ServeJSON()
 }
