@@ -2,7 +2,9 @@ package controllers
 
 import (
 	"concurrency-profiler/concurrency"
+	"concurrency-profiler/profiling"
 	"concurrency-profiler/utils"
+	"fmt"
 
 	"github.com/beego/beego/v2/server/web"
 )
@@ -11,14 +13,18 @@ type ConcurrencyController struct {
 	web.Controller
 }
 
-// TestConcurrency executes and compares all concurrency implementations.
+// TestConcurrency executes the concurrency benchmark.
 //
 // Responsibilities:
 //   - Execute the sequential implementation.
 //   - Execute the WaitGroup implementation.
 //   - Execute the channel implementation.
-//   - Return the execution results as a JSON response.
+//   - Collect controller-level memory statistics.
+//   - Return the benchmark results as a JSON response.
 func (c *ConcurrencyController) TestConcurrency() {
+
+	before := profiling.GetMemoryStats()
+	fmt.Printf("Before: %+v\n", before)
 
 	seq := utils.MeasureExecution(
 		"Sequential",
@@ -40,6 +46,9 @@ func (c *ConcurrencyController) TestConcurrency() {
 			return concurrency.RunChannel(concurrency.APIURLs)
 		},
 	)
+
+	after := profiling.GetMemoryStats()
+	fmt.Printf("After: %+v\n", after)
 
 	c.Data["json"] = map[string]any{
 		"sequential": seq,

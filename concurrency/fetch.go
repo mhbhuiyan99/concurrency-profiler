@@ -11,7 +11,7 @@ import "concurrency-profiler/requests"
 //   - Return the request result.
 func FetchAPI(url string) APIResult {
 
-	req, err := requests.NewGetRequest(url)
+	req, err := requests.NewGETRequest(url)
 	if err != nil {
 		return APIResult{
 			URL: url,

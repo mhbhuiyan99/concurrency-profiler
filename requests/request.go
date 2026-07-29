@@ -22,7 +22,7 @@ import (
 //   - Apply the application's default authentication.
 //   - Apply the application's default request headers.
 //   - Return the configured request.
-func NewGetRequest(url string) (*http.Request, error) {
+func NewGETRequest(url string) (*http.Request, error) {
 	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("create request failed: %w", err)
