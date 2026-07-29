@@ -207,12 +207,12 @@ func FormatPercentage(value float64) string {
 	return fmt.Sprintf("%.2f%%", value)
 }
 
-// mostEfficientMethod identifies the execution method that provides
-// the best overall result based on execution time and allocation volume.
+// mostEfficientMethod identifies the execution method with the best
+// overall performance based on execution time and allocation volume.
 //
 // Responsibilities:
-//   - Prefer a method that is fastest and has the lowest allocation volume.
-//   - Fall back to the fastest method when no method dominates both metrics.
+//   - Prefer a method that is both faster and has lower allocation volume.
+//   - Return the fastest method when no method dominates both metrics.
 func mostEfficientMethod(
 	sequentialTime time.Duration,
 	waitGroupTime time.Duration,
