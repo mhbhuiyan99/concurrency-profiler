@@ -12,15 +12,31 @@ type ConcurrencyController struct {
 	web.Controller
 }
 
-// TestConcurrency executes the concurrency benchmark.
+// TestConcurrency executes the concurrency benchmark and coordinates profiling.
 //
 // Responsibilities:
+//   - Start and stop CPU profiling.
 //   - Execute the sequential implementation.
 //   - Execute the WaitGroup implementation.
 //   - Execute the channel implementation.
 //   - Collect controller-level memory statistics.
 //   - Return the benchmark results as a JSON response.
 func (c *ConcurrencyController) TestConcurrency() {
+
+	cpuProfile, err := profiling.StartCPUProfile("profiles/cpu.prof")
+	if err != nil {
+		c.Data["json"] = map[string]any{
+			"error": err.Error(),
+		}
+		c.ServeJSON()
+		return
+	}
+
+	defer func() {
+		if err := profiling.StopCPUProfile(cpuProfile); err != nil {
+			fmt.Printf("CPU profiling stop failed: %v\n", err)
+		}
+	}()
 
 	before := profiling.GetMemoryStats()
 	fmt.Printf("Before: %+v\n", before)

@@ -1,3 +1,34 @@
+## Architecture
+```
+Controller
+    │
+    ├── StartCPUProfile()
+    │
+    ├── GetMemoryStats()
+    │
+    ├── ProfilePhase()
+    │      │
+    │      └── MeasureExecution()
+    │             │
+    │             └── RunSequential()
+    │
+    ├── ProfilePhase()
+    │      │
+    │      └── MeasureExecution()
+    │             │
+    │             └── RunWaitGroup()
+    │
+    ├── ProfilePhase()
+    │      │
+    │      └── MeasureExecution()
+    │             │
+    │             └── RunChannel()
+    │
+    ├── GetMemoryStats()
+    │
+    └── StopCPUProfile()
+```
+
 ### Sequential
 ```
 Client
