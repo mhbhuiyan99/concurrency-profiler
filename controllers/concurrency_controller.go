@@ -3,7 +3,6 @@ package controllers
 import (
 	"concurrency-profiler/concurrency"
 	"concurrency-profiler/profiling"
-	"concurrency-profiler/utils"
 	"fmt"
 
 	"github.com/beego/beego/v2/server/web"
@@ -26,21 +25,21 @@ func (c *ConcurrencyController) TestConcurrency() {
 	before := profiling.GetMemoryStats()
 	fmt.Printf("Before: %+v\n", before)
 
-	seq := utils.MeasureExecution(
+	seq := profiling.ProfilePhase(
 		"Sequential",
 		func() []concurrency.APIResult {
 			return concurrency.RunSequential(concurrency.APIURLs)
 		},
 	)
 
-	wg := utils.MeasureExecution(
+	wg := profiling.ProfilePhase(
 		"WaitGroup",
 		func() []concurrency.APIResult {
 			return concurrency.RunWaitGroup(concurrency.APIURLs)
 		},
 	)
 
-	ch := utils.MeasureExecution(
+	ch := profiling.ProfilePhase(
 		"Channel",
 		func() []concurrency.APIResult {
 			return concurrency.RunChannel(concurrency.APIURLs)
@@ -55,5 +54,6 @@ func (c *ConcurrencyController) TestConcurrency() {
 		"waitgroup":  wg,
 		"channel":    ch,
 	}
+
 	c.ServeJSON()
 }

@@ -129,3 +129,48 @@ Receive 12 Results
 
 Return []APIResult
 ```
+
+## Profiling
+
+```
+                    Controller
+                        │
+                        ▼
+              ProfilePhase(...)
+                        │
+            ┌───────────┴───────────┐
+            │                       │
+            ▼                       ▼
+    Memory/Goroutine          MeasureExecution()
+       profiling                   │
+            │                      │
+            │                      ▼
+            │                 RunSequential()
+            │
+            └───────────┬───────────┘
+                        │
+                        ▼
+                 ProfileResult
+```
+
+```
+ProfilePhase()
+    │
+    ├── GetMemoryStats()
+    │
+    ├── NumGoroutine()
+    │
+    ├── MeasureExecution()
+    │       │
+    │       ├── start timer
+    │       │
+    │       ├── fn()
+    │       │      │
+    │       │      └── RunSequential()
+    │       │
+    │       └── stop timer
+    │
+    ├── GetMemoryStats()
+    │
+    └── NumGoroutine()
+```

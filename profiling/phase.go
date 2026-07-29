@@ -1,56 +1,49 @@
 package profiling
 
 import (
+	"concurrency-profiler/concurrency"
+	"concurrency-profiler/utils"
 	"runtime"
-	"time"
 )
 
-// PhaseResult represents the profiling result of one execution phase.
+// PhaseResult represents profiling information for one execution phase.
 //
 // Responsibilities:
-//   - Store the phase name.
-//   - Store the execution time.
+//   - Store the execution result.
 //   - Store memory statistics before and after execution.
 //   - Store goroutine counts before and after execution.
 type PhaseResult struct {
-	Name              string
-	ExecutionTime     time.Duration
+	Execution         concurrency.PhaseResult
 	MemoryBefore      MemoryStats
 	MemoryAfter       MemoryStats
 	GoroutinesBefore  int
 	GoroutinesAfter   int
 }
 
-// ProfilePhase measures the performance of one execution phase.
+// ProfilePhase profiles one execution phase.
 //
 // Responsibilities:
 //   - Capture memory statistics before execution.
 //   - Capture goroutine count before execution.
-//   - Measure execution time.
-//   - Execute the provided function.
+//   - Execute the provided function using the common execution timer.
 //   - Capture memory statistics after execution.
 //   - Capture goroutine count after execution.
-//   - Return the collected profiling metrics.
+//   - Return the execution and profiling results.
 func ProfilePhase(
 	name string,
-	fn func(),
+	fn func() []concurrency.APIResult,
 ) PhaseResult {
 
 	memoryBefore := GetMemoryStats()
 	goroutinesBefore := runtime.NumGoroutine()
 
-	start := time.Now()
-
-	fn()
-
-	executionTime := time.Since(start)
+	execution := utils.MeasureExecution(name, fn)
 
 	memoryAfter := GetMemoryStats()
 	goroutinesAfter := runtime.NumGoroutine()
 
 	return PhaseResult{
-		Name:             name,
-		ExecutionTime:    executionTime,
+		Execution:        execution,
 		MemoryBefore:     memoryBefore,
 		MemoryAfter:      memoryAfter,
 		GoroutinesBefore: goroutinesBefore,
