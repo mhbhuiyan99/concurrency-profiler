@@ -1,6 +1,6 @@
 conf/app.conf
 concurrency-profiler
-profiles/*.prof
+*.prof
 
 # Binaries
 *.exe
