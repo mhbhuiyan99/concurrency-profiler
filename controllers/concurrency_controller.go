@@ -65,10 +65,17 @@ func (c *ConcurrencyController) TestConcurrency() {
 	after := profiling.GetMemoryStats()
 	fmt.Printf("After: %+v\n", after)
 
+	comparison := profiling.ComparePhases(
+		seq,
+		wg,
+		ch,
+	)
+
 	c.Data["json"] = map[string]any{
 		"sequential": seq,
 		"waitgroup":  wg,
 		"channel":    ch,
+		"comparison": comparison,
 	}
 
 	c.ServeJSON()

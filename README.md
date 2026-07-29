@@ -2,31 +2,28 @@
 ```
 Controller
     │
-    ├── StartCPUProfile()
+    ├── Start CPU profiling
     │
-    ├── GetMemoryStats()
+    ├── Memory Before
     │
-    ├── ProfilePhase()
-    │      │
-    │      └── MeasureExecution()
-    │             │
-    │             └── RunSequential()
+    ├── ProfilePhase("Sequential")
+    │       └── MeasureExecution()
     │
-    ├── ProfilePhase()
-    │      │
-    │      └── MeasureExecution()
-    │             │
-    │             └── RunWaitGroup()
+    ├── ProfilePhase("WaitGroup")
+    │       └── MeasureExecution()
     │
-    ├── ProfilePhase()
-    │      │
-    │      └── MeasureExecution()
-    │             │
-    │             └── RunChannel()
+    ├── ProfilePhase("Channel")
+    │       └── MeasureExecution()
     │
-    ├── GetMemoryStats()
+    ├── Memory After
     │
-    └── StopCPUProfile()
+    └── ComparePhases()
+            │
+            ├── Fastest
+            ├── Performance gain
+            ├── Memory comparison
+            ├── Goroutine comparison
+            └── Most efficient
 ```
 
 ### Sequential
@@ -204,4 +201,60 @@ ProfilePhase()
     ├── GetMemoryStats()
     │
     └── NumGoroutine()
+```
+
+### Controller-level
+Controller-level profiling measures the overall `/test-concurrency` execution. It captures memory statistics before and after all three concurrency phases and runs CPU profiling across the complete controller execution.
+```
+Controller: /test-concurrency
+│
+├── Start CPU profiling
+│
+├── Memory statistics before execution
+│      ├── Alloc
+│      ├── TotalAlloc
+│      ├── Sys
+│      └── NumGC
+│
+├── Sequential Phase
+│
+├── WaitGroup Phase
+│
+├── Channel Phase
+│
+├── Memory statistics after execution
+│      ├── Alloc
+│      ├── TotalAlloc
+│      ├── Sys
+│      └── NumGC
+│
+└── Stop CPU profiling
+```
+
+### Phase-level
+
+Phase-level goes inside that controller and measures each execution strategy separately.
+```
+Controller
+│
+├── Sequential
+│      ├── memory before
+│      ├── goroutines before
+│      ├── execution time
+│      ├── memory after
+│      └── goroutines after
+│
+├── WaitGroup
+│      ├── memory before
+│      ├── goroutines before
+│      ├── execution time
+│      ├── memory after
+│      └── goroutines after
+│
+└── Channel
+       ├── memory before
+       ├── goroutines before
+       ├── execution time
+       ├── memory after
+       └── goroutines after
 ```
