@@ -106,7 +106,15 @@ func ComparePhases(
 		channelMemory,
 	)
 
-	result.MostEfficientMethod = result.FastestMethod
+	result.MostEfficientMethod = mostEfficientMethod(
+		sequentialTime,
+		waitGroupTime,
+		channelTime,
+		sequentialMemory,
+		waitGroupMemory,
+		channelMemory,
+		result.FastestMethod,
+	)
 
 	return result
 }
@@ -197,4 +205,47 @@ func lowestMemoryMethod(
 //   - Convert a performance percentage into readable text.
 func FormatPercentage(value float64) string {
 	return fmt.Sprintf("%.2f%%", value)
+}
+
+// mostEfficientMethod identifies the execution method that provides
+// the best overall result based on execution time and allocation volume.
+//
+// Responsibilities:
+//   - Prefer a method that is fastest and has the lowest allocation volume.
+//   - Fall back to the fastest method when no method dominates both metrics.
+func mostEfficientMethod(
+	sequentialTime time.Duration,
+	waitGroupTime time.Duration,
+	channelTime time.Duration,
+	sequentialMemory uint64,
+	waitGroupMemory uint64,
+	channelMemory uint64,
+	fastest string,
+) string {
+	// Channel dominates both metrics.
+	if channelTime <= sequentialTime &&
+		channelTime <= waitGroupTime &&
+		channelMemory <= sequentialMemory &&
+		channelMemory <= waitGroupMemory {
+		return "Channel"
+	}
+
+	// WaitGroup dominates both metrics.
+	if waitGroupTime <= sequentialTime &&
+		waitGroupTime <= channelTime &&
+		waitGroupMemory <= sequentialMemory &&
+		waitGroupMemory <= channelMemory {
+		return "WaitGroup"
+	}
+
+	// Sequential dominates both metrics.
+	if sequentialTime <= waitGroupTime &&
+		sequentialTime <= channelTime &&
+		sequentialMemory <= waitGroupMemory &&
+		sequentialMemory <= channelMemory {
+		return "Sequential"
+	}
+
+	// No method dominates both metrics.
+	return fastest
 }
