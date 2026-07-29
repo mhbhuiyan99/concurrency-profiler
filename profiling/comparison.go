@@ -10,8 +10,7 @@ import (
 // Responsibilities:
 //   - Identify the fastest execution method.
 //   - Calculate performance gains between execution methods.
-//   - Identify the highest and lowest memory usage.
-//   - Store goroutine usage for each execution method.
+//   - Compare allocation volume between execution methods.
 //   - Identify the overall most efficient method.
 type ComparisonResult struct {
 	FastestMethod       string
@@ -24,9 +23,6 @@ type ComparisonResult struct {
 	SequentialMemory    uint64
 	WaitGroupMemory     uint64
 	ChannelMemory       uint64
-	SequentialGoroutine int
-	WaitGroupGoroutine  int
-	ChannelGoroutine    int
 	MostEfficientMethod string
 }
 
@@ -66,8 +62,7 @@ func CalculatePerformanceGain(
 // Responsibilities:
 //   - Identify the fastest execution method.
 //   - Calculate performance gains.
-//   - Compare memory usage.
-//   - Compare goroutine usage.
+//   - Compare allocation volume between execution methods.
 //   - Identify the overall most efficient method.
 func ComparePhases(
 	sequential PhaseResult,
@@ -91,9 +86,6 @@ func ComparePhases(
 		SequentialMemory:    sequentialMemory,
 		WaitGroupMemory:     waitGroupMemory,
 		ChannelMemory:       channelMemory,
-		SequentialGoroutine: sequential.GoroutinesAfter,
-		WaitGroupGoroutine:  waitGroup.GoroutinesAfter,
-		ChannelGoroutine:    channel.GoroutinesAfter,
 	}
 
 	result.FastestMethod = fastestMethod(

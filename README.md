@@ -1,29 +1,28 @@
 ## Architecture
 ```
-Controller
-    │
-    ├── Start CPU profiling
-    │
-    ├── Memory Before
-    │
-    ├── ProfilePhase("Sequential")
-    │       └── MeasureExecution()
-    │
-    ├── ProfilePhase("WaitGroup")
-    │       └── MeasureExecution()
-    │
-    ├── ProfilePhase("Channel")
-    │       └── MeasureExecution()
-    │
-    ├── Memory After
-    │
-    └── ComparePhases()
-            │
-            ├── Fastest
-            ├── Performance gain
-            ├── Memory comparison
-            ├── Goroutine comparison
-            └── Most efficient
+TestConcurrency()
+│
+├── start controller timer
+│
+├── Start CPU profiling
+│
+├── memory before
+│
+├── ProfilePhase(Sequential)
+│
+├── ProfilePhase(WaitGroup)
+│
+├── ProfilePhase(Channel)
+│
+├── memory after
+│
+├── ComparePhases()
+│
+├── stop controller timer
+│
+├── terminal report       
+│
+└── JSON response
 ```
 
 ### Sequential
@@ -257,4 +256,20 @@ Controller
        ├── execution time
        ├── memory after
        └── goroutines after
+```
+## profiling.PhaseResult
+```
+profiling.PhaseResult
+│
+├── Execution ────────────────► concurrency.PhaseResult
+│                                  │
+│                                  ├── Name
+│                                  ├── ExecutionTime
+│                                  └── Results
+│
+├── MemoryBefore
+├── MemoryAfter
+├── GoroutinesBefore
+├── GoroutinesAfter
+└── PeakGoroutines
 ```

@@ -4,6 +4,7 @@ import (
 	"concurrency-profiler/concurrency"
 	"concurrency-profiler/profiling"
 	"fmt"
+	"time"
 
 	"github.com/beego/beego/v2/server/web"
 )
@@ -22,6 +23,8 @@ type ConcurrencyController struct {
 //   - Collect controller-level memory statistics.
 //   - Return the benchmark results as a JSON response.
 func (c *ConcurrencyController) TestConcurrency() {
+
+	start := time.Now()
 
 	cpuProfile, err := profiling.StartCPUProfile("profiles/cpu.prof")
 	if err != nil {
@@ -71,11 +74,14 @@ func (c *ConcurrencyController) TestConcurrency() {
 		ch,
 	)
 
+	totalExecutionTime := time.Since(start)
+
 	c.Data["json"] = map[string]any{
 		"sequential": seq,
 		"waitgroup":  wg,
 		"channel":    ch,
 		"comparison": comparison,
+		"totalExecutionTime": totalExecutionTime,
 	}
 
 	c.ServeJSON()
